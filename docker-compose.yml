@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: creditos
+      POSTGRES_USER: creditos
+      POSTGRES_PASSWORD: creditos_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - creditos_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U creditos -d creditos"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=creditos;Username=creditos;Password=creditos_dev_password
+      Jwt__Issuer: creditos-api
+      Jwt__Audience: creditos-mobile
+      Jwt__Key: docker-development-only-jwt-key-change-in-production-123456
+      Jwt__ExpirationMinutes: 60
+      Smtp__Host: mailhog
+      Smtp__Port: 1025
+      Smtp__FromEmail: creditos@demo.local
+      Smtp__FromName: Creditos Demo
+      Smtp__UseSsl: "false"
+      Smtp__UseStartTls: "false"
+      CreditNotification__RecipientEmail: creditos@gmail.com
+      AllowedOrigins: http://localhost:8100,http://localhost:5173
+      DemoUsers__Enabled: "true"
+      DemoUsers__Password: Demo1234!
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailhog:
+        condition: service_started
+
+volumes:
+  creditos_pgdata:
