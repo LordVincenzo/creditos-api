@@ -20,6 +20,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.30" />
   </ItemGroup>
   <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="../../src/Creditos.Api/Creditos.Api.csproj" />
   </ItemGroup>
 </Project>
