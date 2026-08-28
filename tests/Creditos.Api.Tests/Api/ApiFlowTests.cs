@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Creditos.Api.Data;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Creditos.Api.Tests.Api;
@@ -27,7 +27,6 @@ public class ApiFlowTests
             builder.ConfigureServices(services =>
             {
                 services.RemoveAll<DbContextOptions<AppDbContext>>();
-                services.RemoveAll<IDbContextOptionsConfiguration<AppDbContext>>();
                 services.RemoveAll<AppDbContext>();
                 services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase(_databaseName));
             });
@@ -124,3 +123,4 @@ public class ApiFlowTests
         Assert.Contains(result!.Items, item => item.ClientName == "Maria Lopez");
     }
 }
+

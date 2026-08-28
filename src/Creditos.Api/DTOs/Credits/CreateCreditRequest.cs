@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Creditos.Api.DTOs.Credits;
 
@@ -10,12 +10,13 @@ public sealed class CreateCreditRequest
     [Required, StringLength(50, MinimumLength = 3)]
     public string ClientDocument { get; set; } = string.Empty;
 
-    [Required, Range(typeof(decimal), "0.01", "9999999999999999.99")]
+    [Required, Range(typeof(decimal), "0.01", "9999999999999999.99", ParseLimitsInInvariantCulture = true)]
     public decimal? Amount { get; set; }
 
-    [Required, Range(typeof(decimal), "0", "100")]
+    [Required, Range(typeof(decimal), "0", "100", ParseLimitsInInvariantCulture = true)]
     public decimal? InterestRate { get; set; }
 
     [Required, Range(1, 600)]
     public int? TermMonths { get; set; }
 }
+
